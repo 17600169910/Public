@@ -1,0 +1,14 @@
+virsh 常用命令
+
+virsh list                  //查看运行的主机
+virsh list --all            //查看所有主机包括没有运行的
+virsh start 主机域名          //启动一个虚拟主机
+virsh shutdown 主机域名       //关闭一个虚拟主机 不好用～
+virsh destroy 主机域名        //关闭一个虚拟主机 好用
+virsh undefine 主机域名       //在list列表内删除该域名主机
+virsh console 主机域名        //链接虚拟主机Console口
+virsh suspend 主机域名         //挂起虚拟主机
+virsh resume 主机域名          //恢复被挂起主机
+virsh autostart 主机域名       //子主机 随 母主机一起开机启动
+virsh autostart --disable 主机域名   //关闭子主机开机启动
+virsh start 主机域名 --console    //启动主机 并链接上

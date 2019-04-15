@@ -1,0 +1,13 @@
+brctl 命令
+
+添加桥接网卡：
+
+brctl addbr <DEVICE>     //添加一个新的桥接网卡
+
+brctl delbr <device>     //删除一个桥接网卡
+
+brctl addif <bridge> <device>     //将物理网卡绑定到桥接设备
+
+brctl stp <bridge> <device>       //开启桥接网卡生成树协议
+
+brctl show                        //查看已经生成的桥接设备列表

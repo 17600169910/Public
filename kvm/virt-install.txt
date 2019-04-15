@@ -1,0 +1,107 @@
+virt-install工具的使用：
+
+virt-install是一个命令工具，可以为KVM或者Xen等虚拟化工具生成虚拟机。
+
+virt-install命令
+
+指定链接域：
+
+--connect=qemu:///system  
+
+虚拟机名称配置：
+
+-n|--name       //指定生成虚拟机名称   （主要参数）
+
+虚拟机内存配置:
+
+-r|--ram        //指定生成虚拟机的内存大小单位MB 
+
+虚拟机CPU配置：
+
+-vcps：         //指定虚拟cpu核心数量
+
+[,maxvcps=数量]      //指定虚拟机最大使用cpu核心数量（vpcs子参数）
+[,sockets=数量]      //指定虚拟机逻辑核心数  （vpcs子参数）
+[,cores=数量]        //指定虚拟机核心数量 （vpcs子参数）
+[,threads=数量]      //指定虚拟机核心线程数量 （vpcs子参数）
+
+虚拟机安装配置：
+
+-c|--cdrom      //指定光盘安装
+[,device=cdrom|disk]    //指定类型
+
+-l|--location   //指定URL安装（如 FTP、HTTPD、NFS）连接地址
+
+--pxe           //指定安装方式为PXE进行安装
+
+-x|--extra-args "ks=http://172.16.0.1/class.cfg"   //如使用pxe进行安装改参数指定ks文件位置
+
+--livecd        //把光盘当做livecd
+
+--os-type=（linux|unix|windows）     //指定安装是那种虚拟主机
+
+--os-variant=（rhel|fedora）         //定安装具体那种系统变体
+
+--boot=（BOOTOPTS） //指定安装完成后的配置选项，列入引导次序
+
+[--boot cdrom,hd,network]   //例如开心先Cdrom->磁盘->network 启动顺序
+[--boot kernel=KERNEL,initrd=INITRD,kernel_args=”console=/dev/ttyS0”]  //指定启动系统的内核及initrd文件
+
+存储配置：
+
+--disk=磁盘文件   //指定给虚拟机提供的磁盘文件 （可以是真实的磁盘，或者是qume-img生成的虚拟文件）
+[,device=cdrom|disk|floppy]   //指定磁盘文件类型
+[,bus=ide|scsi|usb|virtio|xen]   //指定磁盘类型
+[,perms=rw|ro|sh]             //指定磁盘权限信息
+[,cache=none|writethrouth（缓存读）|writeback（缓存读写）]   //指定磁盘缓存类型（不常用）
+[,format=raw|qcow2|vmdk]     //指定磁盘文件格式（qcow2格式最常用）
+[,sparse]                    //指定磁盘为稀疏格式（不立即分配全部的磁盘空间）
+
+网络配置:
+
+-w 网络名称|--network=网络名称        //指定虚拟机连入指定网络
+[bridge=桥接网卡名称]                 //指定虚拟机接入指定的桥接网络（常用）
+[model=e1000|rtl8193|virtio]                 //指定虚拟机生成的网卡型号（默认e1000）
+[mac=52:54:00:*:*:*:*]                //指定网卡Mac地址（前三项固定）（常用）
+[--nonetwork]                         //指定虚拟机不适用网络功能
+
+显示配置:
+
+--graphics TYPE                      //指定图形显示相关的配置
+TYPE类型：
+[vnc|sdl|spice|none]                 //VNC最常用
+[port]                               //指定VNC或者spice使用的端口
+[listen]                             //指定VNC或者spice监听IP地址
+[password]                           //指定VNC或者spice连接访问密码
+[keymap=en-us]                       //防止VNC链接内不能正常使用键盘！！！
+[--noautoconsole]                    //禁止虚拟主机创建完成。自动连接到控制台
+
+虚拟机同宿主机自动启动：
+
+--autostart                           //指定虚拟机同宿主机开机同事启动（常用）
+
+
+虚拟化平台：
+虚拟化模型（hvm或paravirt）、模拟的CPU平台类型、模拟的主机类型、hypervisor类型（如kvm、xen或qemu等）以及当前虚拟机的UUID等；  
+
+-v|--hvm：             //当物理机同时支持完全虚拟化和半虚拟化时，指定使用完全虚拟化；  
+
+-p|--paravirt          //指定使用半虚拟化；  
+
+--virt-type            //使用的hypervisor，如kvm、qemu、xen等；所有可用值可以使用’virsh capabilities’命令获取；
+
+
+
+其他参数：
+
+-d|--debug            //显示调试信息
+
+--force               //禁止进入交互模式，如果有yes或no自动回到yes
+
+--dry-run             //模拟创建虚拟机的整个进程。只是模拟跑一便。
+
+
+
+
+
+  

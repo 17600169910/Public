@@ -1,0 +1,22 @@
+qemu-img 命令
+
+    格式： qemu-img [options] <disk-path>
+
+options:
+    -c|create       //提供创建
+    -f              //制定磁盘格式
+    -o              //制定附加参数
+      
+                [,size]                                             //指定文件大小
+                [,backing_file]                                     //指定文件映射的名称
+                [,preallocation （metadata|off|falloc|full）]        // 预配置信息常用metadata及不立即分配所有磁盘空间
+    -info           //显示某个文件属性信息
+    -snapshot       //穿件一个虚拟机快照文件
+        格式：snapshot [-l | -a snapshot | -c snapshot | -d snapshot] filename
+        -l          //列出文件所有快照
+        -c          //创建一个快照文件
+        -d          //删除一个快照文件
+    -rebase         //修改一个文件格式（只有qcow2和qed格式支持rebase命令）
+        格式：rebase [-f fmt] [-t cache] [-p] [-u] -b backing_file [-F backing_fmt] filename
+    -resize         //修改一个文件大小
+        格式：resize filename [+ | -]size

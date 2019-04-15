@@ -1,0 +1,30 @@
+KVM 以思列开发，后被红帽收购
+
+类型一的VMM软件
+
+原理：
+
+    KVM是一款基于内核模块实现的虚拟化软件
+    红帽5.8就开始支持内核编译KVM模块，一旦宿主机加载KVM模块
+摇身一变成为Hypervisor。
+    /dev/kvm    文件用于提供虚拟机的创建、删除、分配内存、分配CPU等作用
+    KVM 必须要求C宿主机CPU支持 Inter VT-X或者 AMD AMD-V 硬件辅助功能才能使用
+
+安装：
+    部署KVM非常简单，只需要加载其中KVM模块即可。
+
+1、查看CPU是否支持硬件辅助虚拟化技术。
+    
+    grep -E --color=auto  “vmx|svm”  /proc/cpuinfo
+
+2、加载KVM模块。
+
+    modprobe kvm
+    modprobe kvm-inter
+
+3、验证KVM安装情况。
+
+    lsmod |grep “kvm×”
+    ls /dev/kvm
+
+   注： 出现如上两个显示内容则表示KVM安装成功。

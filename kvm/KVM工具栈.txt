@@ -1,0 +1,29 @@
+KVM工具栈：
+    
+    KVM支持的工具栈有两种：
+        1、qemu      //qemu 是一个完整的虚拟化软件，并不需要KVM即可独自完成虚拟化操作，
+qemu 与 KVM 属于合作关系，qemu是模拟工具，模拟工具的性能不是很好，所以依靠KVM提高使用性能。
+        2、libvirtd  //libvirtd 是红帽与其他提供者共同开发的一款通用软件，可以在多种虚
+化软件中使用。
+
+qemu：
+    
+    qemu-img            //用于提供磁盘文件的模拟
+    qemu-kvm            //用于提供KVM虚拟机的创建
+
+
+libvirtd：
+       
+    使用libvirtd 需要提前启动libvirtd服务：
+    /etc/init.d/libvirtd start
+
+    virt-install        //提供命令行格式进行虚拟化软件的安装
+    
+    virt-manager        //提供图形化的虚拟机创建
+
+    virsh               //提供虚拟机全生命周期的管理工作
+
+
+
+    
+    

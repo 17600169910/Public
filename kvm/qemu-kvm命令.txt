@@ -1,0 +1,64 @@
+qemu-kvm 用于提供虚拟机的创建
+
+格式：qemu [options] [disk_image]
+
+qemu-kvm 的常用模块类型：
+
+1、标准模块
+2、网络模块
+3、I/O设备模块
+4、显示模块
+
+
+标准模块：
+
+-m          //制定虚拟机内存大小
+-smp=number[options]       //制定虚拟机CPU数量
+    options:
+            cores=物理CPU数量
+            sockets=主板支持的CPU插槽数量
+            threads=指定每个cpu线程数量
+            maxcpus=制定虚拟机最大使用CPU数量
+-cpu        //制定虚拟机支持的cpu类型，使用？号获取所有支持信息
+-name       //制定虚拟机名称
+-hda        //制定虚拟机的安装磁盘
+-hdc        //制定虚拟机的光盘
+-drive file=/path/[options]    //与hda选项一样，不过使用功能更高级，支持的参数更多。
+    options:
+            if=         //制定磁盘接口类型 推荐virtio模式（ide|scsi|mdd）
+            media=      //制定磁盘介质 （cdrom|disk）
+            cache=      //制定刷盘方式  （同步双写|异步双写）
+            format=     //制定磁盘类型
+            index=      //制定磁盘标标识符
+            snapshot=（no|off）   //是否支持快照
+            
+-cdrom file=/path/      //制定光盘位置
+-boot oder=                 //制定虚拟机启动项
+    d=光盘启动
+    c=本地磁盘启动
+    once=表示第一次启动选项，一般都是d
+  格式：-boot oder=dc once=d
+
+    
+                                   显示模块
+
+-sdl        //开启sdl显示。貌似此功能被禁用
+-vnc        //默认启动虚拟机启动选项
+    -vnc ×：0
+    参数：
+        ，password=需要进入qemu管理窗口设置密码
+-usb -usbdevice tablet 防止鼠标偏移
+
+                                    网络模块
+-net
+    nic         //前半段配置
+    tap         //后半段配置
+        常用参数：
+                ifname=后半段中网卡名称
+                macaddr=制定mac地址
+                model=virtio    //制定类型
+                script=启动脚本
+
+-ballon virtio  //动态缩曾减内存大小
+
+
