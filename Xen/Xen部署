@@ -1,0 +1,39 @@
+Xen 安装
+
+更新YUM仓库源：
+
+[Xen]
+name=Xen
+baseurl=https://mirrors.aliyun.com/centos/6/virt/x86_64/xen-46/
+gpgcheck=0
+enabled=1
+
+更新系统：
+
+yum update 
+
+下载Xen：
+
+yum -y install  xen tr​​ansfig wget texi2html libaio-devel dev86 glibc-devel e2fsprogs-devel gitk mkinitrd iasl xz-devel bzip2-devel pciutils-libs pciutils-devel SDL-devel libX11-devel gtk2-devel bridge-utils PyXML qemu-common qemu-img mercurial texinfo libuuid-devel
+
+yum install glibc-devel.i686
+
+
+
+检测内核版本：
+
+uname -r  
+
+修改grub.conf内核配置：
+
+title CentOS (3.18.30-20.el6.x86_64)
+        root (hd0,0)
+        kernel /xen.gz dom0_mem=512M cpufreq=xen dom0_max_vcpus=1 dom0_vcpus_pin  loglvl = all guest_loglvl = all //添加此信息 制定Domain0 使用的内存和CPU数量。
+
+        module /vmlinuz-3.18.30-20.el6.x86_64 ro root=/dev/mapper/VolGroup-lv_root rd_NO_LUKS rd_NO_MD rd_LVM_LV=VolGroup/lv_swap crashkernel=auto LANG=zh_CN.UTF-8 rd_LVM_LV=VolGroup/lv_root  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet
+        module /initramfs-3.18.30-20.el6.x86_64.img
+
+重新启动服务器：
+
+xl list   //检测Domain0 运行状态
+

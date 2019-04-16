@@ -1,0 +1,67 @@
+xl 命令
+    xl 可以提供Xen Domain U 机器的创建、删除、生命周期的管理操作。
+
+格式：
+    xl [-vfN] <subcommand> [args]
+
+常用参数:
+
+    create                   基于一个配置文件创建Domain域
+    config-update            更新一个正在运行的Domain配置文件，该域重启后配置生效
+    destroy                  删除一个Domain U
+    shutdown                 发出一个关机指令给Domain U
+    reboot                   发出一个重启指令给Domain U
+
+    pci-attach               热插一个PCI设备
+    pci-detach               热拔一个PCI设备
+    pci-list                 列出一个Domain U 的所有正在使用的PCI设备
+
+    paus                     暂停一个正在运行的Domain U
+    unpaus                   恢复一个暂停的Domain U
+    
+    console                  链接至Domain U 的控制台
+    vncviewer                使用vnc链接Domain U控制台
+    
+    save                     保存一个Domain状态 用于后期恢复
+    restore                  恢复一个被save保存的Domain
+    migrate                  将Domain U 迁移至 其他Hypervisor
+    migrate-receive          从保存的状态还原域
+
+    cd-insert                热插一个cd设备
+    cd-eject                 热拔一个cd设备
+
+    mem-max                  设置一个域内存最大使用量
+    mem-set                  修改一个域的内存使用量
+
+    vcpu-list                查看Domain域的cpu使用量
+    vcpu-pin                 修改DomainU的cpu倾向性
+    vpcu-set                 修改DomainU的cpu使用数量
+
+    info                     查看Domain 0 的具体使用信息
+
+    domid                    使用domid 获取主机名称
+    domname                  使用domname 获取domid
+    rename                   重命名一个Domain
+    
+    top                      获取所有Domain U的 进场使用量
+    
+    network-attach           热插一块网卡给Domain U
+    network-detach           热拔一块网卡
+    network-list             列出Domain U 使用的网卡
+
+    block-attach             热插一块磁盘设备
+    block-detach             热拔一块磁盘设备
+    block-list               显示domainU 磁盘使用量
+
+    uptime                   打印所有Domain 系统负载
+
+
+    
+    
+
+    
+
+    
+    
+    
+    
