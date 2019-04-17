@@ -1,0 +1,95 @@
+项目背景:
+
+    使用模拟路由器功能 实现多台KVM实例的相互隔离功能，使不同的虚拟网络KVM使用不同的规则进行
+外网访问。
+
+    vm-001  实现虚拟路由器实现SNAT模型通信。
+
+
+1、安装KVM环境
+
+    grep -E --color=auto "svm|smx" /proc/cpuinfo     //检测机器是否支持硬件辅助虚拟化
+
+2、加载kvm模块
+
+    modprobe kvm
+
+    lsmod |grep “kvm”                               //出现KVM模块代表加载成功
+
+3、生成Qemu磁盘文件，准备安装光盘设备
+
+    mkdir /kvm
+    
+    qemu-kvm create -f qcow2 -o size=10G,preallocation=metadata /kvm/centos01.qocw2.img
+    
+4、使用qemu-kvm 或者 virt-install 或者 virt-manager 方式进行安装Guest主机.
+
+    qemu-kvm -m 512 -smp 1 -name vm-001 -drive file=/kvm/centos01.qocw2.img,if=virtio,media=disk,format=qcow2 -drive file=/kvm/CentOS-6.7-x86_64-bin-DVD1.iso,media=cdrom -net nic,model=virtio,macaddr=52:54:00:xx:xx:xx -net tap,ifname=vif1.1,script=启动时使用的脚本文件 -vnc ×：0 -daemonize
+
+
+5、使用netns 创建虚拟路由设备。(注意，请先升级iproute软件包支持netns参数，Centos7默认已经支持)
+
+    ip netns add r1
+    ip netns list 
+    ip netns exec r1 ip a
+
+6、创建双片网卡（一段基于r1 一段基于 交换机）。
+
+    ip link add rin1 type veth peer name rin2    //创建两片网卡 rin1 于 rin2
+    ip link show
+    ip link set rin1 up
+    ip link set rin2 up                          //注意开启俩块网卡 
+
+7、添加网卡。
+
+    ip link set rin1 netns r1                   //将任意一半网卡附加在R1路由中
+    ip netns exec r1 ip a
+    ip netns exec r1 ip link set rin1 name eth0 //可以将网卡名更改使用
+
+8、添加交换机设备。
+
+    yum -y install brctl
+
+    brctl addbr br1
+    ip link set br1 up                          //开启br1网卡
+    brctl addif br1 rin2                        //附加另一半网卡
+
+9、给R1口添加内网服务器使用的网关地址。
+
+    ip netns exec r1 ip addr add 133.133.1.254/24 dev eth0
+    ip netns exec r1 ip link set eth0 up
+
+10、完成虚拟机内的网关地址配置，测试Ping通，则内网部分配置完成
+
+
+11、开启宿主机的路由转发功能。
+
+
+12、再次创建两片网卡，用于实现外网通信，桥接至外网桥设备。
+
+    ip link add sin1 type veth peer name sin2
+    ip link show
+    ip link set sin1 up 
+    ip link set sin2 up
+    brctl addif br0 sin1                        //此处的br0为桥接物理网卡的桥设备
+13、再次附加R1 sin2 网卡，实现外网通信。
+
+    ip link set sin2 netns r1
+    ip netns exec r1 ip a
+    ip netns exec r1 ip link set sin2 name eth1
+    ip netns exec r1 ip addr add 192.168.1.100/24 dev eth1       //注意此处IP为外网通信地址
+    ip netns exec r1 route add default gw 192.168.1.1            //在R1中添加默认网管地址，并测试Ping通网管地址。
+
+14、添加iptables规则 实现SNAT通信。
+
+   ip netns exec r1 iptables -t nat -I POSTROUTING -s 133.133.1.0/24 ! -d 133.133.1.0 -o eth1 -j MASQUERADE
+
+虚拟机内ping 外网地址 部署完成。
+
+
+注意：
+
+    请确保所有网卡均已UP模式
+    请确保宿主机的路由转发模式已经开启
+    请确保路由中有默认网关地址
+    

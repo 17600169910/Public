@@ -1,0 +1,62 @@
+CentOS6.5以前，内核不支持网络namespace，需要升级内核和iproute。
+CentOS6.5以后内核已支持网络namespace，只需要升级iproute即可。
+
+我的系统版本是6.7的。介绍2个方法，亲测可用。
+
+[root@centos67 ~]# cat /etc/redhat-release
+ CentOS release 6.7 (Final)
+[root@centos67 ~]# uname -r
+2.6.32-573.el6.x86_64
+
+方法一：升级iproute
+
+yum install -y http://rdo.fedorapeople.org/rdo-release.rpm
+
+修改地址
+
+cat /etc/yum.repos.d/rdo-release.repo
+[openstack-kilo]
+name=OpenStack Kilo Repository
+baseurl=https://repos.fedorapeople.org/repos/openstack/EOL/openstack-icehouse/epel-6/
+skip_if_unavailable=0
+enabled=1          // 如果报错ｓｓｌ　将其设置为０
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-kilo
+安装iproute
+
+yum install -y iproute
+
+
+方法二：升级内核
+
+通过yum快速升级CentOS 6.x 内核到3.1.0
+
+# rpm -ivh http://www.elrepo.org/elrepo-release-6-5.el6.elrepo.noarch.rpm
+# yum --enablerepo=elrepo-kernel install kernel-lt -y
+在grub.conf中确定装好的内核在哪个位置：
+
+# vi /etc/grub.conf
+default=0
+重启系统，查看内核信息
+
+[root@centos67 ~]# uname -r
+3.10.94-1.el6.elrepo.x86_64
+更新iproute软件包
+
+yum install -y http://rdo.fedorapeople.org/rdo-release.rpm
+修改地址
+
+cat /etc/yum.repos.d/rdo-release.repo
+[openstack-kilo]
+name=OpenStack Kilo Repository
+baseurl=https://repos.fedorapeople.org/repos/openstack/EOL/openstack-icehouse/epel-6/
+skip_if_unavailable=0
+enabled=1
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-kilo
+升级iprpute 软件包
+
+# yum upgrade iproute
+[root@centos67 ~]# rpm -qa|grep iproute
+iproute-2.6.32-130.el6ost.netns.2.x86_64
+完毕！
