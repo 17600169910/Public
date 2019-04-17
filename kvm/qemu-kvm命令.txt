@@ -33,7 +33,7 @@ qemu-kvm 的常用模块类型：
             snapshot=（no|off）   //是否支持快照
             
 -cdrom file=/path/      //制定光盘位置
--boot oder=                 //制定虚拟机启动项
+-boot order=                 //制定虚拟机启动项
     d=光盘启动
     c=本地磁盘启动
     once=表示第一次启动选项，一般都是d
@@ -60,5 +60,6 @@ qemu-kvm 的常用模块类型：
                 script=启动脚本
 
 -ballon virtio  //动态缩曾减内存大小
+-daemonize      //后台守护模式运行
 
 
