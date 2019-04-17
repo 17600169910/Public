@@ -1,0 +1,24 @@
+Rename 用于修改文件名称
+
+格式：
+
+  rename from to file 
+
+  rename [来着那个文件] [修改后的名称] [文件]
+
+for i in `seq 10`;
+do
+  touch 2.$i
+done
+
+rename 2 4 2.*             //将2 更改为4
+
+-rw-r--r--  1 root root          0 1月  24 04:59 4.100
+-rw-r--r--  1 root root          0 1月  24 04:59 4.2
+-rw-r--r--  1 root root          0 1月  24 04:59 4.3
+-rw-r--r--  1 root root          0 1月  24 04:59 4.4
+-rw-r--r--  1 root root          0 1月  24 04:59 4.5
+-rw-r--r--  1 root root          0 1月  24 04:59 4.6
+-rw-r--r--  1 root root          0 1月  24 04:59 4.7
+-rw-r--r--  1 root root          0 1月  24 04:59 4.8
+-rw-r--r--  1 root root          0 1月  24 04:59 4.9

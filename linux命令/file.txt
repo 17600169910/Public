@@ -1,0 +1,6 @@
+file 用于显示文件或目录属性信息
+
+
+[root@localhost ~]# file 1      //显示1是一个目录
+1: directory
+

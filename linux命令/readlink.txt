@@ -1,0 +1,15 @@
+用于查看一个连接文件源文件信息 
+
+使用星数：一颗
+
+格式：
+
+readlink [option] 文件
+
+参数：
+
+-f     //显示完整路径信息
+
+
+readlink -f /usr/sbin/vipr
+

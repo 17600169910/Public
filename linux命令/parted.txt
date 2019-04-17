@@ -1,0 +1,19 @@
+再生产环境中 磁盘分区 超过2T fdisk将无法分区，需要使用parted命令
+由于MBR分区表只能支持2T磁盘，需要将其转换成GPT格式。
+
+命令格式：
+
+parted 【device】
+
+参数：
+
+select /dev/sdb   //选择磁盘
+
+mklabel gpt       //转换磁盘格式为GPT格式
+
+mkpart primary 0 50  //分配磁盘空间
+
+mkpart primary 0 -l    //将整块磁盘分成一个分区
+
+prit               //打印出整个磁盘信息
+

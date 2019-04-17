@@ -1,0 +1,65 @@
+ip命令 用来管理IP地址的添加、删除、激活、关闭
+
+
+格式：
+
+
+ip addr [add|del] [option] IP/NETMASK [option]
+
+
+常用参数：
+
+
+add   //添加一个IP地址
+
+ip addr add 133.133.1.1/24 dev eth0
+
+del   //删除一个IP地址
+
+ip addr del 133.133.1.1/24 dev eth0
+
+
+show  //查看一个网卡配置信息
+
+ip addr show eth0
+
+route  //用于查看路由条目信息
+
+
+ip route show
+
+
+get    //用于查看某个IP地址的来源
+
+
+ip route get 133.133.1.11
+
+133.133.1.11 dev eth0  src 133.133.1.1             //显示133.133.1.11 src 133.133.1.1
+    cache  mtu 1500 advmss 1460 hoplimit 64
+
+
+当你需要获取一个特定网络接口的信息时，在网络接口名字后面添加选项ls即可。使用多个选项-s会给你这个特定接口更详细的信息。特别是在排除网络连接故障时，这会非常有用。
+
+
+ip -s -s link ls eth0
+
+
+-s  //表示详细输出模式显示
+
+添加分片网卡：
+
+ip link add sin1 type veth peer name sin2    
+
+开启网卡：
+
+ip link set 网卡名称 [up|down]
+
+查询所有网卡：
+
+ip link show
+
+
+
+
+
+

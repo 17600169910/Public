@@ -1,0 +1,26 @@
+shutdown 命令用于执行关机操作
+
+
+格式
+
+ shutdown [option] 
+
+
+常用参数：
+
+
+-r   //立即重启服务器
+
+-h    //立即断电服务器
+
+
+-h +5 &    //5分钟后执行关机操作
+
+-h +5      //等价于进行取消任务操作
+
+-c         //用于显示后台正在执行的关机操作
+
+
+[root@localhost ~]# shutdown -c           //显示后台执行命令以及时间
+shutdown: Shutdown cancelled
+[1]+  Done                    shutdown -h +5

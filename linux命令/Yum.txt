@@ -1,0 +1,62 @@
+1.5总结：YUM常用命令：
+1.安装软件包:
+
+yum install package
+yum localinstall package 从本机目录安装软件包
+yum groupinstall group 安装某个组件的全部软件包
+
+下载RPM包不进行安装：
+
+yum install --downloadonly  <Packers>
+
+--downloadonly       仅下载不进行安装（/var/cache/yum/）内保存
+
+--downloaddir=/PASH/DIR   指定安装包下载位置进行保存
+
+
+2.更新软件包：
+yum update package
+yum check-update 列出所有可更新的软件包
+yum list updates mysql* 查找mysql的更新
+yum update 更新所有可更新的软件包
+yum update mysql* 更新所有mysql的软件包
+yum groupupdate group 更新某个组件的所有软件包
+yum list 列出所有已安装和仓库中可用的软件包
+yum list available 列出仓库中所有可用的软件包
+yum list updates 列出仓库中比当前系统更新的软件包
+yum list installed 列出已安装的软件包
+yum list recent 列出新加入仓库的软件包
+yum info 查询软件包信息
+       
+3.删除软件包：
+yum remove package
+yum groupremove group 删除某个组件的全部软件包
+
+4.清除软件包
+yum clean packages 清除遗留在缓存里的包文件
+yum clean metadata 清除遗留在缓存里的元数据
+yum clean headers 清除遗留在缓存里的头文件
+yum clean all 清除包文件，元数据，头文件
+
+5.搜索软件包：
+yum search package
+yum info package 查找一个软件包的信息
+yum list package 列出包含指定信息的软件包
+yum list installed 列出已安装的软件包
+yum list extras 列出不是通过软件仓库安装的软件包
+yum list *ttp* 列出标题包含ttp的软件包
+yum list updates 列出可以更新的软件包
+
+6.查找特定文件是由什么软件包提供的：
+yum whatprovides filename
+例子:
+yum whatprovides httpd.conf
+
+可用选项
+–disalberepo=lib 禁用某个软件仓库
+–enalberepo=lib 启用某个软件仓库
+
+-C 禁用使用本机缓存的元数据
+例子:
+yum –disalberepo=livna|–enalberepo=livna install mplayer
+yum -C info httpd

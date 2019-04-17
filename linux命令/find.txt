@@ -1,0 +1,81 @@
+Find 命令用于文件查找，功能相当强大。
+
+格式：
+
+
+find [option] 路径
+
+
+常用参数：
+
+
+-maxdepth 级别       //用于在几级目录下查找内容
+
+-mtime [n|+n|-n]              //按文件修改时间进行查找，单位为：天
+
+n   代表在几天
++n  代表在几天之前
+-n  代表在几天内
+
+-atime [n|+n|-n]              //按文件访问时间进行查找 单位为：天
+ 
+-ctime [n|+n|-n]              //按文件状态改变时间进行查找 单位为：天
+
+-amin [n|+n|-n]               //按文件状态访问时间进行查找 单位为：分钟
+
+-cmin [n|+n|-n]               //按文件改变时间进行查找 单位为：分钟
+
+-mmin [n|+n|-n]               //按文件状态改变时间进行查找 单位为：分钟
+
+-name                         //按文件名称进行查找
+
+-user                         //按文件所属者进行查找
+
+-nouser                       //查找没有有效所属者的文件 根据/etc/passwd文件进行查找
+
+-group                        //按文件所属组进行查找
+
+-nogroup                      //查找没有有效所属组的文件 根据/etc/groups文件进行查找
+
+-size                         //按文件大小进行查找
+
+-newer                        //比较A比B更改时间新的文件
+
+-path                         //制定制定文件配合-prune参数进行排除某个文件
+\（-path /root/hehe -o -path /root/haha\） -prune       //排除 hehe与haha 文件
+
+-prem                         //按照文件权限进行查找
+
+-type                         //按照制定类型文件进行查找
+
+-f:文件
+-d：目录
+-l：连接文件
+-b：块设备
+-c：字符设备
+-p：管道设备
+-s：sock文件
+
+
+Actions模块
+
+-delete       //将查找到的文件删除
+
+find / -type d -name "hehe" -delete
+
+-exec         //查找完交给exec进行命令执行
+
+find / -type f -size 20G -name "haha" -exec rm {} \;
+
+-ok          //与-exec参数相同，只不过执行需要用户确认
+
+-prune       //制定不查找，配合-path参数一起使用
+
+-print0        //现在已0进行结尾
+
+！            //取反查找
+-a            //或查找
+
+-o            //与查找
+
+

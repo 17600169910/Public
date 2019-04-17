@@ -1,0 +1,42 @@
+md5sum 用于计算和校验文件的MD5值，可以检查文件是否完整（世界上没有俩片相同的叶子）
+
+该命令多用于文件加密或校验
+
+
+格式：
+
+    md5sum [option] [file]
+
+
+常用参数：
+
+
+-b        //以二进制模式读取文件
+
+
+[root@localhost ~]# md5sum -b 4.2      //以二进制格式读取4.2文件
+d41d8cd98f00b204e9800998ecf8427e *4.2
+
+
+
+-c         //从指定文件读取MD5值进行比对
+
+[root@localhost ~]# md5sum -b 4.100 >md5sum.txt
+
+
+[root@localhost ~]# md5sum -c md5sum.txt   //读取MD5sum。txt进行文件比对
+
+4.100: 确定
+
+
+
+--quiet              //用于校验时，指定OK的文件不进行输出
+
+--status             //用于校验，校验结果不管对于错，都不进行输出，可以通过$? 进行判断
+
+
+[root@localhost ~]# md5sum -c --status md5sum.txt 
+
+[root@localhost ~]# echo $?               //文件正确会返回0值，其他返回值都是错误
+0
+

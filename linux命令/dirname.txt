@@ -1,0 +1,12 @@
+dirname 吓吓与basename功能相反，它用于读取文件上一级路径
+
+
+[root@localhost ~]# tree 1
+1
+└── 2
+    └── 3.txt
+
+
+
+[root@localhost ~]# dirname 1/2/3.txt         //dirname 只能显示需要查找的文件上一级路径
+1/2

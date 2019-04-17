@@ -1,0 +1,14 @@
+basename  用于去除文件的路径显示
+
+[root@localhost ~]# tree 1
+1
+└── 2
+    └── 3.txt
+
+
+
+[root@localhost ~]# basename 1/2/3.txt      //basename 用于去除路劲信息显示，一般多用于脚本中，比如复制文件
+3.txt
+
+
+
