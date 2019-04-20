@@ -1,0 +1,39 @@
+ovs-vsctl 是openvswitch 中创建桥、创建高级功能命令。
+
+常用参数：
+   
+    show         //查看交换机基础信息
+    init         //初始化交换机，注意启动openvswitch时已经初始化过
+    emer-reset   //重置交换机到最初状态
+
+Bridge 命令：
+
+    add-br        //创建一个桥设备
+    del-br        //删除一个桥设备
+    list-br       //列出交换机上所有桥设备
+    br-to-vlan    //显示指定桥对应的Vlan号
+
+Port 命令：
+
+    list-port       //列出所有端口
+    add-port        //添加一个网卡
+    del-port        //删除一个网卡
+    port-to-br      //显示端口对应桥设备
+
+Interface 命令：
+
+    list-interface  //显示接口信息
+    iface-to-br     //显示接口对应的桥
+
+Database 命令：
+
+    list  [TBL]      //列出数据库中某值信息
+    find  [TBL]      //查找某值信息
+    get   [TBL]      //获取某值信息
+    set   [TBL]      //修改数据库中某值信息
+    remove [TBL]     //清除某值配置信息
+
+以上为常用命令，如需要其它命令 请使用 ovs-vsctl --help 获取。
+
+    
+
