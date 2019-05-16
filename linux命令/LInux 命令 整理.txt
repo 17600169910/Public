@@ -1,0 +1,382 @@
+系统架构:
+arch                 // 显示机器处理器架构
+uname -m             // 显示机器的处理器架构
+uname -r             // 显示正在使用的内核版本
+
+磁盘:
+hdparm -i /dev/sda   // 罗列显示一个磁盘设备的架构特性
+hdparm -tT /dev/sda  // 测试一个磁盘读写性能 (性能测试)
+
+cpu:
+cat /proc/cpuinfo    // 显示CPU 所有信息
+cat /proc/interrupts // 显示系统中断数
+cat /proc/meminfo    // 校验内存使用情况
+cat /proc/swaps      // 显示那些swap被使用
+cat /proc/version    // 显示内核版本信息
+cat /proc/net/dev    // 显示网络适配器及统计信息
+cat /proc/mounts     // 显示已加载的文件系统
+cat /etc/filesystems // 显示系统可以使用的文件系统
+
+时间:
+date                  // 显示系统时间
+cal [年]              //  显示日历
+date 051319002019.00  [月日时分年.秒]格式   // 重新设置系统时间
+clock -w              // 将系统时间同步到BIOS中
+
+关机重启:
+
+shutdown -h now       // 关闭服务器
+init 0                // 关闭服务器
+halt                  // 关闭服务器
+telinit 0             // 关闭服务器
+shutdown -h 小时:分钟 &   // 定时关闭服务器
+shutdown -c           // 取消定时功能
+shutdown -r now       // 重启服务器
+reboot                // 重启服务器
+init 6                // 重启服务器
+logout                // 退出当前用户
+
+文件或目录:
+
+cd /home              // 进入home 目录
+cd ..                 // 返回上一级目录
+cd ../..              // 返回上两级目录
+cd                    // 进入个人主目录
+cd ~                  // 回到用户家目录
+pwd                   // 打印当前目录位置
+ls                    // 查看当前目录文件
+ls -F                 // 查看目录中的文件
+ls -a|-A              // 查看隐藏文件
+ls -l                 // 长格式显示
+ls *[0-9]*            // 显示包含数字的文件和目录名
+
+tree                  // 树状结果显示目录
+lstree                // 显示文件和目录由根目录开始的数行结果
+
+mkdir /hehe           // 创建hehe目录
+mkdir -p /hehe/haha   // 递归格式创建目录
+
+rm -f file            // 删除文件
+rm -rf file           // 强制递归删除 不询问 危险操作
+rmdir 目录             // 删除空目录 目录有文件将无法删除
+
+mv A B                 // 将A 更名为 B
+mv /path/A /hehe/      // 将A 移动到 B下面
+
+cp file1 file2         // 复制一份file1 取名叫file2
+cp -rf /hehe /tmp   
+
+文件查找命令:
+
+find
+
+locate \*.ps      
+
+whereis <commit>       // 显示一个二进制文件源码文件位置
+
+which   <commit>       // 显示一个命令 完整路径
+
+
+磁盘挂载:
+
+mount
+umount
+fuser
+
+用户创建和删除:
+
+useradd
+
+usermod
+
+userdel
+
+groupadd
+
+groupmod
+
+groupdel
+
+
+passwd 用户                //修改用户密码
+
+chage -E 年-月-日  用户     //设置用户账号失效时间
+
+pwck                       // 检测/etc/passwd 文件权限
+
+chmod ugo+rwx             // u 所有者 g 所有组 o 其他用户
+
+chmod go-rwx              // g 所属组 和 其他用户 取消所有权限
+
+chmod 777 (4+2+1)
+
+chmod u+s                  // 设置一个SUID (运行该文件的用户 拥有所有者权限)
+chmod g+s                  // 设置一个SGID (非组内成员运行时 拥有所属组权限)
+chmod u-s
+chmod g-s
+chmod o+t                   // 设置一个文件的 STIKY 位 - 只允许合法所有人删除文件
+chmod o-t                  
+
+
+文件特殊权限:
+
+chattr +|-a                  // 只允许以追加的方式读写文件
+chattr +|-c                  // 运行该文件被内核自动压缩和解压缩
+chattr +|-d                  // 进行备份时 dump 命令会忽律该文件
+chattr +|-i                  // 设置文件不可以更改.删除,重命名,链接 操作
+chattr +|-s                  // 运行文件被安全删除
+chattr +|-S                  // 一旦该文件发生更改会立即同步到磁盘中
+chattr +|-u                  // 若该文件被删除,系统将会允许恢复操作
+lsattr                       // 显示文件特殊权限信息
+
+打包压缩:
+
+bzip2    file                // 压缩一个文件
+bunzip2  file.bz2            // 解压一个一.bz2格式的文件
+
+gzip     file                 // 压缩一个.gz格式的文件
+gunzip   file.gz              // 解压缩
+
+rar a file.ara file           // 创建一个rar格式的压缩文件
+rar a file.rar file1 file2 hehe     // 打包多个文件和目录 rar格式
+rar x file.rar                // 解压一个rar 格式压缩文件
+unrar x file.rar              // 解压一个rar 格式压缩文件
+
+tar -cvf hehe.tar hehe        // 打包一个目录
+tar -xvf hehe.tar             // 解包一个目录
+tar -tf hehe.tar              // 查看包内文件信息
+tar jcvf hehe.tar.bz2 hehe    // 打包并压缩一个bz2格式的文档
+tar zcvf hehe.tar.gz hehe     // 打包并压缩一个gz格式的文档
+
+zip file.zip file             // 创建一个zip 压缩包
+unzip file.zip                // 解压缩
+zip -d file.zip               // 解压缩
+zip -r file.zip  file1 file2 file3   //压缩多个文件 zip格式
+
+ReadHat|Centos RPM命令:
+
+rpm -qa <PACKER>              // 查询一个rpm包是否已经安装
+rpm -qi <PACKER>              // 获取一个已经安装包的特殊信息
+rpm -qf <file>                // 获取一个配置文件提供者
+rpm -ql <PACKER>              // 获取安装生成的所有文件列表
+rpm -qc <PACKER>              // 获取对应生成的配置文件列表
+
+rpm -q <PACKER> --whatrequires // 获取对应软件包需要的依赖包信息
+rpm -q <PACKER> --scripts      // 获取安装该软件包执行的脚本文件
+rpm -q <PACKER> --changelog    // 获取软件包历史信息
+
+rpm -V <PACKER>                // 检测软件包文件尺寸、 许可、类型、所有者、群组、MD5检查以及最后修改时间
+rpm -Va                        // 检测所有
+
+rpm -ivh <PACKER>              // 安装一个软件包
+rpm -Uvh <PACKER>              // 升级一个软件包 不修改配置信息
+rpm -e <PACKER>                // 卸载一个软件包
+rpm -e <PACKER> --nodeps       // 强制进行卸载 忽略依赖
+
+yum install <Packer>           // 自动安装一个软件包 帮忙解决所有依赖包
+yum localinstall <Packer.rpm>  // 使用本地源进行安装rpm包
+yum provides <commit>          // 查找指定命令来源那个安装包
+yum update                     // 更新系统中所有的包
+yum update <Packer>            // 更新某个包
+yum remove <Packer>            // 卸载一个软件包 同事卸载依赖包信息
+yum list all                   // 列出系统源中存在的所有包
+yum search <name>              // 安装给出的名称进行模糊匹配查找
+yum clean all                  // 删除所有缓存的包和头文件
+yum repolist                   // 重建仓库
+yum makecheck                  // 生成源数据信息
+
+查看文件命令:
+
+cat          //正序查看
+tac          //倒序查看
+head         //查看头部
+tail         //查看尾部
+tailf        //动态查看
+more         //翻页查看
+
+文本处理器:
+
+grep:
+
+grep Aug file      //列出file中包含了Aug关键词的行
+grep ^Aug file     //列出以Aug开头的行
+grep Aug$ file     //列出以Aug结尾的行
+grep [0-9] file    //列出包含数字的行
+grep Aug -R /path/*     // 列出目录下所有文件包含Aug关键词的行
+grep -v Aug file   //取反操作
+grep -w Aug file   //精确匹配
+grep -o Aug file   //只匹配Aug关键词
+grep -i Aug file   //忽略大小写限制
+grep -l Aug /path/*     // 列出所有包含Aug关键词的文件
+
+
+sed:
+
+sed -n '/hehe/p'        //打印出包含hehe词的行
+sed '/hehe/d'           //删除包含hehe词的行
+sed 's/hehe/haha/'      //匹配到第一个hehe 将其更换为 haha
+sed 's/hehe/haha/g'     //将全局的hehe更换为haha
+sed '/^$/d'             //删除空行
+sed '/^#/d'             //删除开头为#号的行
+sed '1,$d'              //从第一行一直删除到结尾
+sed '/ ^#/d; /^$/d'     //删除开头为#号同时删除开头为空的行
+sed '2d'                //删除第二行
+sed 's/^#//g'           //删除#号注释
+sed 's/*$//g'           //删除每一行最后的空白字符
+
+awk:
+
+cat file |awk '{print $1}'           //查看文件 并打印出以空格分割的第一个字符
+cat file |awk -F: '{print $1}'       //以:号作为分割符 显示第一个信息
+cat file |awk '/hehe/ {print $1}'    //匹配包含hehe 的行 然后打印第一个信息
+cat file |awk '{print hehe,$1 haha,$2}'  //字符拼接
+
+
+文件分割合并比较:
+
+split:
+
+split -l 100 file.log           // 将file.log 日志 以100行为单位进行分割操作
+split -b 100m file.log          // 将file.log 日志 以100m为单位进行分割操作
+split -C 100m file.log          // 以大小进行分割 竟可能保证数据完整性
+
+cat part_* > new.log            // 使用cat 命令进行文件合并操作(列式合并)
+
+paste file1 file2 file3 ... >new.log     // 使用paste 命令进行文件合并操作(横向合并)
+paste -d "+" file1 file2  >new.log       // 合并俩个文件 并以+号分割显示
+
+sort file1 file2                         // 将俩个文件排序显示
+sort file1 file2 | uniq                  // 取出两个文件的并集(重复的行只保留一份)
+sort file1 file2 | uniq -u               // 删除交集，留下其他的行
+sort file1 file2 | uniq -d               // 取出两个文件的交集(只留下同时存在于两个文件中的文件)
+
+comm -1 file1 file2                      // 比较俩个文件内容 只删除file1 所包含的内容
+comm -2 file1 file2                      // 比较俩个文件内容 只删除file2 所包含的内容
+comm -3 file1 file2                      // 只删除俩个文件共有的部分内容
+
+diff file1 file2                         // 比较file1 和file2 
+
+
+
+文本字符设置和转换:
+
+dos2unix filedos.txt fileunix.txt        // 将格式msdos 文件转换正 unix格式文件
+unix2dos fileunix.txt filedos.txt        // 将unix格式转换成msdos格式
+
+
+文件系统分析及修复:
+
+badblockes -v /Dev/sdb1                 // 检测磁盘损坏的磁块
+
+fsck /Dev/sdb1                          // 自动修复磁盘
+
+fsck.ext[234]  /dev/sdb1                // 以某种格式进行修复
+
+e2fack /Dev/sdb1                        // 检测/修复磁盘
+
+
+格式化文件系统:
+
+fdisk -l                                // 列出服务器上所有磁盘
+fdisk /Dev/sdb1                         // 磁盘分区操作
+parted /dev/sdb1                        // 大于2T的磁盘分区软件
+
+mkfs -t [ext4|xfs]    /dev/sdb1         // 格式化文件系统
+mkfs.[ext4|xfs]       /Dev/sdb1         // 格式化文件系统
+mkfs.ext4 -L media /dev/sdb1            // 设置磁盘标签,相当于Windows的盘符
+mke2fs -t [ext3|ext4|xfs]  /Dev/sdb1    // 格式化磁盘
+
+Swap文件系统:
+
+mkswap /dev/hda3                         // 创建一个swap文件系统
+swapon /dev/hda3                         // 启用一个新的swap文件系统
+swapon /dev/hda2                         // /dev/hdb3 启用两个swap分区
+
+
+
+备份
+
+dump -0aj -f /tmp/home0.bak /home                制作一个 '/home' 目录的完整备份
+dump -1aj -f /tmp/home0.bak /home                制作一个 '/home' 目录的交互式备份
+restore -if /tmp/home0.bak                       还原一个交互式备份
+rsync -rogpav --delete /home /tmp                同步两边的目录
+rsync -rogpav -e ssh --delete /home ip_address:/tmp             通过SSH通道rsync
+rsync -az -e ssh --delete ip_addr:/home/public /home/local      通过ssh和压缩将一个远程目录同步到本地目录
+rsync -az -e ssh --delete /home/local ip_addr:/home/public      通过ssh和压缩将本地目录同步到远程目录
+dd bs=1M if=/dev/hda | gzip | ssh user@ip_addr 'dd of=hda.gz'   通过ssh在远程主机上执行一次备份本地磁盘的操作
+dd if=/dev/sda of=/tmp/file1                                    备份磁盘内容到一个文件
+tar -Puf backup.tar /home/user 执行一次对 '/home/user'            目录的交互式备份操作
+( cd /tmp/local/ && tar c . ) | ssh -C user@ip_addr 'cd /home/share/ && tar x -p'          通过ssh在远程目录中复制一个目录内容
+( tar c /home ) | ssh -C user@ip_addr 'cd /home/backup-home && tar x -p'                   通过ssh在远程目录中复制一个本地目录
+tar cf - . | (cd /tmp/backup ; tar xf - )                                                  本地将一个目录复制到另一个地方，保留原有权限及链接
+find /home/user1 -name '*.txt' | xargs cp -av --target-directory=/home/backup/ --parents   从一个目录查找并复制所有以 '.txt' 结尾的文件到另一个目录
+find /var/log -name '*.log' | tar cv --files-from=- | bzip2 > log.tar.bz2                   查找所有以 '.log'  结尾的文件并做成一个bzip包
+dd if=/dev/hda of=/dev/fd0 bs=512 count=1                                                   做一个将 MBR (Master Boot Record)内容复制到软盘的动作
+dd if=/dev/fd0 of=/dev/hda bs=512 count=1                                                   从已经保存到软盘的备份中恢复MBR内容
+
+
+
+光盘
+cdrecord -v gracetime=2 dev=/dev/cdrom -eject blank=fast -force                              清空一个可复写的光盘内容
+mkisofs /dev/cdrom > cd.iso                                                                  在磁盘上创建一个光盘的iso镜像文件
+mkisofs /dev/cdrom | gzip > cd_iso.gz                                                        在磁盘上创建一个压缩了的光盘iso镜像文件
+mkisofs -J -allow-leading-dots -R -V "Label CD" -iso-level 4 -o ./cd.iso data_cd             建一个目录的iso镜像文件
+cdrecord -v dev=/dev/cdrom cd.iso                                                            刻录一个ISO镜像文件
+gzip -dc cd_iso.gz | cdrecord dev=/dev/cdrom -                                               刻录一个压缩了的ISO镜像文件
+mount -o loop cd.iso /mnt/iso                                                                挂载一个ISO镜像文件
+cd-paranoia -B                                                                               从一个CD光盘转录音轨到 wav 文件中
+cd-paranoia -- "-3" 从一个CD光盘转录音轨到 wav 文件中（参数-3）
+cdrecord --scanbus 扫描总线以识别scsi通道
+dd if=/dev/hdc | md5sum 校验一个设备的md5sum编码，例如一张 CD
+
+
+
+
+网络 - （以太网和WIFI无线）
+ifconfig eth0                                    显示一个以太网卡的配置
+ifup eth0                                        启用一个 'eth0' 网络设备
+ifdown eth0                                      禁用一个 'eth0' 网络设备
+ifconfig eth0 192.168.1.1 netmask 255.255.255.0  控制IP地址
+ifconfig eth0 promisc                            设置 'eth0' 成混杂模式以嗅探数据包 (sniffing)
+dhclient eth0                                    以dhcp模式启用 'eth0'
+route -n                                         查看路由表
+route add -net 0/0 gw 192.168.1.1                配置默认网关地址
+route add -net 192.168.0.0 netmask 255.255.0.0 gw 192.168.1.1                 配置静态ip地址网关
+route del 0/0 gw IP_gateway                                                   移除默认网关
+echo "1" > /proc/sys/net/ipv4/ip_forward                                      开启路由转发 临时开启
+hostname                                                                      查看主机名称
+host www.example.com                                                          显示指定域名对应的DNS解析IP地址
+nslookup www.example.com                                                      解析域名对应的A记录
+ip link show                                                                  显示主机上的所有端口
+mii-tool eth0                                                                 查看eth0接口zt状态
+ethtool eth0 show statistics of network card 'eth0'
+netstat -tup show all active network connections and their PID
+netstat -tupl show all network services listening on the system and their PID
+tcpdump tcp port 80                                                           抓取tcp 80 端口的协议包
+iwlist scan                                                                   显示无线网络
+iwconfig eth1 show configuration of a wireless network card
+hostname                                                                      获取当前机器主机名
+
+解析域名:
+
+host www.example.com 
+nslookup www.example.com 
+whois www.example.com   
+dig www.baidu.com    
+
+
+
+
+
+
+
+
+
+ 
+
+
+        
+
+
+
+
