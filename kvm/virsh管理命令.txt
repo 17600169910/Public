@@ -1,14 +1,45 @@
 virsh 常用命令
 
-virsh list                  //查看运行的主机
-virsh list --all            //查看所有主机包括没有运行的
-virsh start 主机域名          //启动一个虚拟主机
-virsh shutdown 主机域名       //关闭一个虚拟主机 不好用～
-virsh destroy 主机域名        //关闭一个虚拟主机 好用
-virsh undefine 主机域名       //在list列表内删除该域名主机
-virsh console 主机域名        //链接虚拟主机Console口
-virsh suspend 主机域名         //挂起虚拟主机
-virsh resume 主机域名          //恢复被挂起主机
-virsh autostart 主机域名       //子主机 随 母主机一起开机启动
+virsh list                          //查看运行的主机
+virsh list --all                    //查看所有主机包括没有运行的
+virsh start 主机域名                 //启动一个虚拟主机
+virsh shutdown 主机域名              //关闭一个虚拟主机 不好用～
+virsh destroy 主机域名               //关闭一个虚拟主机 好用
+virsh undefine 主机域名              //在list列表内删除该域名主机
+virsh console 主机域名               //链接虚拟主机Console口
+virsh suspend 主机域名               //挂起虚拟主机
+virsh resume 主机域名                //恢复被挂起主机
+virsh autostart 主机域名             //子主机 随 母主机一起开机启动
 virsh autostart --disable 主机域名   //关闭子主机开机启动
-virsh start 主机域名 --console    //启动主机 并链接上
+virsh start 主机域名 --console       //启动主机 并链接上
+virsh dumpxl <域名> > <file.xml>     //将一个域导出一个XML文件 用于静态迁移时使用
+virsh domblklist <域名>              //列出某个域的 磁盘文件
+virsh create <file.xml>             // 从一个xml 文件中恢复一个域 (默认启动)
+virsh define <file.xml>             // 从一个xml 文件中恢复一个域 (默认不启动)
+
+virsh edit <Domain>                 // 修改Domain xml 配置文件(列入加入新的磁盘)
+ 
+
+
+
+
+help      显示该命令的说明
+quit      结束 virsh，回到 Shell
+connect  连接到指定的虚拟机服务器
+create    启动一个新的虚拟机
+destroy  删除一个虚拟机
+start    开启（已定义的）非启动的虚拟机
+define    从 XML 定义一个虚拟机
+undefine  取消定义的虚拟机
+dumpxml  转储虚拟机的设置值
+list      列出虚拟机
+reboot    重新启动虚拟机
+save      存储虚拟机的状态
+restore  回复虚拟机的状态
+suspend  暂停虚拟机的执行
+resume    继续执行该虚拟机
+dump      将虚拟机的内核转储到指定的文件，以便进行分析与排错
+shutdown  关闭虚拟机
+setmem    修改内存的大小
+setmaxmem 设置内存的最大值
+setvcpus  修改虚拟处理器的数量
