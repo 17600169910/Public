@@ -1,0 +1,45 @@
+kvm 迁移分为俩种一种静态方式进行迁移,一种动态进行迁移.
+
+静态迁移方式:
+
+   离线迁移,需要一个xml文件,拷贝虚拟机磁盘文件与xml配置文件从源主机
+到目标宿主机中,实现从一台物理机到另一台物理机的迁移.
+   如果需要保存虚拟机迁移之前的状态，那么应该在迁移之前将虚拟机暂停，
+然后拷贝状态至目标宿主机，最后在目标宿主机重建虚拟机状态，恢复执行。
+这种方式的迁移过程需要显式的停止虚拟机的运行。从用户角度看，有明确的一段停机时间，
+虚拟机上的服务不可用。这种迁移方式简单易行，适用于对服务可用性要求不严格的场合。
+
+
+动态迁移方式:
+
+   动态迁移无需拷贝磁盘文件,需要迁移宿主机与源宿主机拥有同一个共享存储支持.
+
+
+静态方式:
+
+1) 将源主机的Domain 呆迁移的域 处于关机状态
+
+virsh list --all
+
+virsh shutdown <Domain> 或 virsh destroy <Domain>       //关闭一个域
+
+virsh domblklist <Domain>                               //列出某个域的磁盘文件
+
+virsh dumpxml <Domain> > /path/file.xml                 //导出一个域的XML配置信息
+
+2) 将宿主机的xml文件和磁盘文件 拷贝到目标迁移主机中
+
+scp file.xml disk.qcow2.img root@133.133.1.1:/kvm       // 复制
+
+
+3) 在目标主机中启动迁移Domain
+
+
+virsh create <file.cxml> 或 virsh define <file.xml>      // 从一个xml文件中读取一个域
+
+virsh list -all
+
+virsh start <Domain>
+
+
+

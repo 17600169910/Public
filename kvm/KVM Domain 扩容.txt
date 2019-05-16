@@ -1,0 +1,30 @@
+基于现有的Domain 进行扩容.
+
+
+1) 生成xml 配置文件
+
+   virsh dumpxml <domian>  >/file.xml
+
+2) 修改xml 配置文件
+
+   virsh edit <Domain>
+
+
+ <disk type='file' device='disk'>     
+  <driver name='qemu' type='qcow2' cache='none'/>      
+  <source file='/data/test01_add.qcow2'/>      
+  <target dev='hdb' bus='ide'/>      
+ </disk>
+
+注)
+  提前使用qemu-img 生成一个新的 磁盘文件
+  需要特别注意的是 dev="name" 这个配置,不要与
+其他磁盘名称相同.
+
+
+2) 启动Domain 
+
+  virsh start <Domain>
+
+
+3) 验证
