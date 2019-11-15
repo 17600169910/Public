@@ -1,0 +1,15 @@
+#!/bin/bash
+set -ex
+source $(pwd)/function.sh
+
+function remove() {
+if [ -d "/mnt/log/" ];then
+	rm -rf /mnt/log/
+	green_echo "docker-log-plugin remove ok"
+else
+	green_echo "docker-log-plugin remove skip ...."
+fi
+
+}
+
+remove

@@ -1,0 +1,28 @@
+#!/bin/bash
+set -ex
+source $(pwd)/function.sh
+
+function remove() {
+sum=0
+A=(
+rpcbind
+nfs-utils
+)
+for i in ${A[@]};do
+N=$(rpm -qa $i |wc -l)
+if [ $N -ge 1 ];then
+	sum=1
+else
+	sum=0
+fi
+done
+
+if [ "$sum" -eq 1 ];then
+	yum -y remove $i >/dev/null 2>&1
+	green_echo "nfs remove ok"
+else
+	green_echo "nfs remove skip ...."
+fi
+
+}
+remove

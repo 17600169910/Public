@@ -1,0 +1,14 @@
+#!/bin/bash
+set -ex
+source $(pwd)/function.sh
+
+function remove() {
+if [ -d "$WORK_DIR/bdl-service" ];then
+	rm -rf $WORK_DIR/bdl-service
+	green_echo "bdl-service remove ok"
+else
+	green_echo "bdl-service remove skip ...."
+fi
+
+}
+remove

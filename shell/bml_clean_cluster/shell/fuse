@@ -1,0 +1,38 @@
+#!/bin/bash
+set -ex
+source $(pwd)/function.sh >/dev/null
+function remove_fuse() {
+sum=0
+
+fuse=(
+fuse
+fuse-devel
+fuse-libs
+)
+for i in ${fuse[@]};do
+	B=$(rpm -qa $i |wc -l)
+	
+    if [ $B -ge 1 ];then
+	sum=1
+    else
+	sum=0
+    fi
+done
+
+if [ "$sum" -eq 1 ];then
+	yum -y remove $i >/dev/null 2>&1
+	green_echo "fuse remove ok"	
+[ -f "/usr/bin/fuse_dfs_wrapper.sh" ] && rm -rf /usr/bin/fuse_dfs_wrapper.sh
+[ -f "/usr/bin/jq" ] && rm -rf /usr/bin/jq
+[ -f "/usr/lib64/libjq.so.1" ] && rm -rf /usr/lib64/libjq.so.1
+[ -f "/usr/lib64/libconfig.so.9" ] && rm -rf /usr/lib64/libconfig.so.9
+[ -f "/usr/lib64/libonig.so.2" ] && rm -rf /usr/lib64/libonig.so.2
+[ -f "/usr/bin/fuse_dfs" ] && rm -rf /usr/bin/fuse_dfs
+[ -d "$FUSE_LOG_DIR" ] && rm -rf $FUSE_LOG_DIR
+[ -f "/usr/libexec/kubernetes" ] && rm -rf /usr/libexec/kubernetes
+else
+	green_echo "fuse remove sikp ...."
+fi
+
+}
+remove_fuse

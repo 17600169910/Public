@@ -1,0 +1,50 @@
+#!/bin/bash
+set +ex
+source $(pwd)/function.sh >/dev/null
+
+function remove_docker_bridge() {
+
+ip link set docker0 down 
+brctl delbr docker0
+yum -y remove bridge-utils
+
+sed -i 's#net.bridge.bridge-nf-call-arptables=1##g' /etc/sysctl.conf
+sed -i 's#net.bridge.bridge-nf-call-iptables=1##g' /etc/sysctl.conf
+sed -i 's#net.bridge.bridge-nf-call-ip6tables=1##g' /etc/sysctl.conf
+
+> /proc/sys/net/bridge/bridge-nf-call-arptables
+> /proc/sys/net/bridge/bridge-nf-call-iptables
+> /proc/sys/net/bridge/bridge-nf-call-ip6tables
+}
+
+
+function remove_docker() {
+
+docker=(
+docker-ce
+container-selinux
+)
+sum=0
+for i in ${docker[@]};do
+	B=$(rpm -qa $i |wc -l)
+	if [ $B -ge 1 ];then
+	    sum=1
+	else
+	    sum=0
+	fi
+done
+if [ "$sum" -eq 1 ];then
+	yum -y remove $i >/dev/null 2>&1
+	green_echo "docker remove ok"
+else
+	green_echo "docker remove skip ...."
+fi
+[ -d /etc/default/docker ] && rm -rf /etc/default/docker
+[ -d /etc/docker ] && rm -rf /etc/docker
+[ -f "/usr/lib/systemd/system/docker.service" ] && rm -rf /usr/lib/systemd/system/docker.service
+[ -f "/etc/systemd/system/multi-user.target.wants/docker.service" ] && rm -rf /etc/systemd/system/multi-user.target.wants/docker.service
+ 
+remove_docker_bridge
+}
+
+remove_docker

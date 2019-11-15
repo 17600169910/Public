@@ -1,0 +1,16 @@
+#!/bin/bash
+set -ex
+source $(pwd)/function.sh
+
+function remove() {
+if [ -e "$WORK_DIR/jupyter/" ];then
+
+	rm -rf $WORK_DIR/jupyter/
+	green_echo "jupyter remove ok"
+else
+	green_echo "jupyter remove skip ...."
+fi
+
+}
+
+remove

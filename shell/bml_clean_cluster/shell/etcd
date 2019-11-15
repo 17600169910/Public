@@ -1,0 +1,28 @@
+#!/bin/bash
+set -xe
+
+source $(pwd)/function.sh
+
+function remove() {
+
+
+systemctl status etcd && systemctl stop etcd && systemctl disable etcd
+
+[ -f "/usr/lib/systemd/system/etcd.service" ] && rm -rf /usr/lib/systemd/system/etcd.service
+
+[ -d ${ETCD_LIB_DIR} ] && rm -rf ${ETCD_LIB_DIR}
+[ -d ${TMP_DIR} ] && rm -rf ${TMP_DIR}
+[ -f ${ETCD_BIN_DIR}/etcd ] && rm -rf ${ETCD_BIN_DIR}/etcd
+[ -f ${ETCD_BIN_DIR}/etcdctl ] && rm -rf ${ETCD_BIN_DIR}/etcdctl
+[ -f "/usr/bin/etcd" ] && rm -rf /usr/bin/etcd
+sum1=$(id etcd |wc -l)
+
+if [ $sum1 -eq 1 ];then
+	userdel -r etcd
+	green_echo "etcd remove ok"
+else
+	green_echo "etcd remove skip ...."
+fi
+
+}
+remove

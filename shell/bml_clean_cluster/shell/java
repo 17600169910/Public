@@ -1,0 +1,14 @@
+#!/bin/bash
+set -ex
+
+function remove() {
+
+rm -rf /opt/jdk1.8.0_111
+
+sed -i '/JAVA_HOME/d' ~/.bashrc
+
+source ~/.bashrc
+
+
+}
+remove

@@ -1,0 +1,41 @@
+#!/bin/bash
+set -ex
+source $(pwd)/function.sh
+function remove() {
+
+
+sum=(
+userspace-rcu
+glusterfs-libs
+glusterfs-client-xlators
+glusterfs-cli
+glusterfs
+psmisc
+glusterfs-fuse
+glusterfs-api
+glusterfs-server
+)
+num=0
+
+cd $COMPONENT_PACKAGES_PATH
+for i in ${sum[@]};do
+	B=$(rpm -qa $i |wc -l)
+    if [ $B -ge 1 ];then
+	num=1
+    fi
+done
+
+if [ "$num" -eq 1 ];then
+for n in ${sum[@]};do	
+	 yum -y remove $n
+
+	if [ $? -eq 0 ];then
+		green_echo "glusterfs remove ok"
+	fi
+done
+else
+	green_echo "glusterfs remove skip ...."
+fi
+}
+
+remove

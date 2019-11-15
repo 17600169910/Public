@@ -1,0 +1,14 @@
+#!/bin/bash
+set -ex
+source $(pwd)/function.sh
+function remove() {
+
+if [ -d "$WORK_DIR/bdl-console" ];then
+	rm -rf $WORK_DIR/bdl-console
+	green_echo "bdl-console remove ok"
+else
+	green_echo "bdl-console remove skip ...."
+fi
+
+}
+remove

@@ -1,0 +1,16 @@
+#!/bin/bash
+set -ex
+source $(pwd)/function.sh
+
+function remove() {
+if [ -d "$WORK_DIR/visualization-service" ];then
+	rm -rf $WORK_DIR/visualization-service
+	if [ $? -eq 0 ];then
+		green_echo "visualization-service remove ok"
+	fi
+else
+	green_echo "visualization-service remove skip ...."
+fi
+}
+
+remove

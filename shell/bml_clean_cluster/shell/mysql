@@ -1,0 +1,36 @@
+#!/bin/bash
+set -ex
+
+source $(pwd)/function.sh >/dev/null
+
+function remove_mysql(){
+
+mysql=(
+mariadb
+mysql
+mysql-community-common
+mysql-community-libs
+mysql-community-client
+mysql-community-server
+)
+sum=0
+
+for i in ${mysql[@]};do
+	B=$(rpm -qa $i |wc -l)
+	if [ $B -ge 1 ];then
+		sum=1
+	fi
+done
+   if [ $sum -eq 1 ];then
+	for n in ${mysql[@]};do
+        yum -y remove $n >/dev/null 2>&1
+        if [ $? -eq 0 ];then
+                green_echo "$i remove ok!"
+        fi
+done
+    else
+		green_echo "Mysql Remove skip...."
+fi
+
+}
+remove_mysql

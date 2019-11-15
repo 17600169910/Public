@@ -1,0 +1,400 @@
+#!/bin/bash
+
+# Environment & Install/Update config
+work_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+ape_version=2.8
+
+# hostname & ip
+# example : 
+# SLAVE_LIST="
+# nmg01-hadoop-dev02.nmg01.baidu.com 10.74.233.11
+# "
+export SLAVE_LIST="
+bjkjy-feed-superpage-gpu-04.bjkjy.baidu.com 10.130.22.45
+"
+
+export VICE_MASTER_LIST="
+"
+
+# list setting, should match regular "^[0-9]+\." as sequence number
+# example : 
+# MASTER_INSTALL_CONPONENT_LIST="
+# 1.mysql
+# 2.docker
+# ...
+# "
+# use '#' as fisrt char to skip component
+export PREINSTALL_COMPONENT_LIST="
+1.java
+2.hadoop
+"
+
+export MASTER_INSTALL_CONPONENT_LIST="
+0.hadoop
+1.mysql
+2.docker
+3.fuse
+4.k8s
+5.docker-registry
+6.docker-log-plugin
+7.images-train
+8.images-notebook
+9.images-serving
+10.image-docker-server
+11.k8s-dns
+12.distribute-train
+13.bdl-console
+14.bdl-service
+15.jupyter
+16.visualization-service
+17.kubernetes-dashboard
+18.nvidia-device-plugin
+19.crontab
+20.sshd
+21.nfs
+22.glusterfs
+23.nginx
+24.hadoop-put
+25.java
+"
+
+export VICE_MASTER_INSTALL_CONPONENT_LIST="
+1.docker
+2.k8s
+3.fuse
+4.docker-log-plugin
+5.crontab
+6.sshd
+7.nfs
+8.glusterfs
+9.nginx
+"
+
+export SLAVE_INSTALL_CONPONENT_LIST="
+1.nvidia-driver
+2.docker
+3.nvidia-docker
+4.fuse
+5.k8s
+6.docker-log-plugin
+7.nginx
+8.crontab
+9.sshd
+10.nfs
+11.glusterfs
+"
+
+export SLAVE_EXTERNAL_COMPONENT_LIST="
+1.k8s-bin
+"
+
+export MASTER_UPDATE_CONPONENT_LIST="
+1.etcd
+2.docker-registry
+3.k8s
+4.mysql
+5.docker-log-plugin
+6.image-push
+7.images-train
+8.images-notebook
+9.images-serving
+10.k8s-dns
+11.nvidia-device-plugin
+12.kubernetes-dashboard
+13.jupyter
+14.visualization-service
+15.nfs
+16.glusterfs
+17.nginx
+18.hadoop
+19.hadoop-put
+20.bdl-service
+21.bdl-console
+22.docker
+23.image-docker-server
+24.fuse
+"
+
+export VICE_MASTER_UPDATE_CONPONENT_LIST="
+1.docker
+2.k8s
+3.fuse
+4.docker-log-plugin
+5.crontab
+6.sshd
+7.nfs
+8.glusterfs
+9.nginx
+"
+
+export SLAVE_UPDATE_CONPONENT_LIST="
+1.k8s
+2.docker-log-plugin
+3.nfs
+4.glusterfs
+5.nvidia-docker
+6.docker
+7.fuse
+"
+
+export PREPARE_COMPONENTS="
+kernel
+"
+
+export SYNC_INSTALL_COMPONENT_LIST="
+etcd
+"
+
+# script settings
+# master host/ip
+export MASTER_HOST=yq01-aip-aikefu16.yq01.baidu.com
+export CLUSTER_IP_LIST=10.153.204.19,10.130.22.45
+export MASTER_IP=10.153.204.19
+# work dir, default value: /data
+export WORK_DIR=${WORK_DIR:-/data}
+# slave packages dir, default value: /data/ape
+export SLAVE_PACKAGES_PATH=""
+export SLAVE_PACKAGES_PATH=${SLAVE_PACKAGES_PATH:-/data/ape}
+export SLAVE_SSH_PORT=22
+# cluster resource info
+export TOTAL_CPU=22
+export TOTAL_GPU=5
+export TOTAL_MEMORY=235520
+export CLUSTER_GPU_SPEC=Tesla-P4:4
+export GPU_TYPE_LIST=Tesla-P4
+#distributed task info
+export SYSTEM_PARAMETER_SERVER_NUMBER=8
+export SYSTEM_WORKER_NUMBER=8
+# DATA DIR for HDFS
+# if there are multiple hdfs paths, split DATA_DIR paths with ','
+# example : export DATA_DIR=/data/path1,/data/path2/
+# default value: $WORK_DIR/hadoop/hdfs/datanode
+export DATA_DIR=""
+export DATA_DIR=${DATA_DIR:-$WORK_DIR/hadoop/hdfs/datanode}
+# if MASTER_DATANODE_INSTALL=true, could set MASTER_DATA_DIR 
+export MASTER_DATA_DIR=""
+export MASTER_DATA_DIR=${MASTER_DATA_DIR:-$WORK_DIR/hadoop/hdfs/datanode}
+# HDFS repication number, default 1
+# should set 2 when there are 2 nodes
+#            3 when where are more than 2 (>=3) nodes
+export HDFS_DFS_REPLICATION=2
+# if install hdfs datanode on master, default false
+export MASTER_DATANODE_INSTALL=false
+# if there is only one node, we should label master with master-compute, otherwise master-no-compute.
+export MASTER_ROLE=master-compute
+export VICE_MASTER_ROLE=master-compute
+# master/slave gpu settings
+export MASTER_WITH_GPU=false
+export VICE_MASTER_WITH_GPU=false
+export SLAVE_WITH_GPU=true
+
+
+# local packages root path
+export PACKAGES_ROOT_PATH=$work_dir/packages
+
+# hostname,ip,java home
+export LOCAL_HOST_IP=`hostname -I | cut -d' ' -f1`
+export JAVA_HOME=/opt/jdk1.8.0_111
+export HOST_NAME=`hostname`
+
+# hdfs
+export CHECKPOINT_DIR=$WORK_DIR/hadoop/hdfs/namesecondary
+export HADOOP_DIR=$WORK_DIR
+export HADOOP_HOME=$HADOOP_DIR/hadoop-2.7.3
+export NAMENODE_HOST=$MASTER_HOST
+export NAMENODE_HOST=${NAMENODE_HOST:-$MASTER_IP}
+export NAME_DIR=$WORK_DIR/hadoop/hdfs/namenode
+export WEB_HDFS_PORT=8070
+export HDFS_PORT=9000
+
+#docker registry
+export REGISTRY_CLUSTER_IP=10.96.0.100
+
+# docker
+export DOCKER_ADDRESS=$MASTER_IP:8137
+export DOCKER_CONF_PATH=/etc/docker
+export DOCKER_DATA_PATH=/docker
+export DOCKER_REGISTRY_PORT=5000
+export DOCKER_REGISTRY=$REGISTRY_CLUSTER_IP:$DOCKER_REGISTRY_PORT
+export DOCKER_CERT_PATH=/etc/docker/pki
+export DOCKER_SERVER_IMAGE=${DOCKER_REGISTRY}/docker:17-dind
+export DOCKER_BUILD_DIR=/data/docker-build
+
+if [ ! -z "$SLAVE_LIST" ]; then
+	allDockerAddr=http://$DOCKER_ADDRESS
+	for slave in `echo "$SLAVE_LIST" |awk '{if(NF!=0){print $1}}'`;
+	do
+        allDockerAddr="$allDockerAddr\,http://$slave:8137"
+	done
+	export ALL_DOCKER_ADDR=$allDockerAddr
+fi
+
+# jupyterhub
+export JUPYTERHUB_ADDRESS=$MASTER_IP:8665
+export JUPYTERHUB_DATABASE='jupyterhub'
+
+# mysql
+export MYSQL_IP=$MASTER_IP
+export MYSQL_PORT=3306
+export BDL_DATABASE='ape_online'
+export MYSQL_USER='bdl'
+export MYSQL_PASS='Bdl@Ape2018'
+
+export BDL_SERVER_HOST=$MASTER_IP
+
+export FLANNEL_NET=`ifconfig | grep -B1 ${LOCAL_HOST_IP} | head -1 | cut -d':' -f1`
+export CONSOLE_IP=$MASTER_IP
+export JUPYTERHUB_IMAGE_NAME=$DOCKER_REGISTRY/jupyterhub:2.8
+export TF_NOTEBOOK_IMAGE_NAME_1_4_PYTHON2=$DOCKER_REGISTRY/notebook-tensorflow:1.4-cuda8-cudnn6-py2_bbd47c08-8da1-4afc-68b1-553d3ff88f36
+export TF_NOTEBOOK_IMAGE_NAME_1_4_PYTHON3=$DOCKER_REGISTRY/notebook-tensorflow:1.4-cuda8-cudnn6-py3_db24bdd6-c522-4c23-4c8d-e435e098d146
+export TF_NOTEBOOK_IMAGE_NAME_1_8_PYTHON2=$DOCKER_REGISTRY/notebook-tensorflow:1.8-cuda9-cudnn7-py2_50db9f2f-2204-4909-4d62-6886bee9288e
+export TF_NOTEBOOK_IMAGE_NAME_1_8_PYTHON3=$DOCKER_REGISTRY/notebook-tensorflow:1.8-cuda9-cudnn7-py3_100b42e0-58c9-4d9e-6631-a74bd7f77d54
+export PADDLE_NOTEBOOK_IMAGE_NAME_0_10=$DOCKER_REGISTRY/notebook-paddlepaddle:0.10.1-cuda8-cudnn5_0acc19d0-2564-464d-7520-03f106a6f56f
+export PADDLE_NOTEBOOK_IMAGE_NAME_0_12=$DOCKER_REGISTRY/notebook-paddlepaddle:0.12.0-cuda8-cudnn7-demo_27e4cb2e-d226-4d50-556e-b028d3541028
+export NOTEBOOK_IMAGE_NAME=$TF_NOTEBOOK_IMAGE_NAME_1_4_PYTHON2
+export PADDLE_10_IMAGE=$DOCKER_REGISTRY/paddle-0.10:cuda8-cudnn5_b2b2acfc-eeea-49f8-5c83-1b2ca770c802
+export PADDLE_12_IMAGE=$DOCKER_REGISTRY/paddle-0.12:cuda8-cudnn7_da2b3043-d423-4d33-5da4-4d9ef698add6
+export TENSORFLOW_1_4_PYTHON2=$DOCKER_REGISTRY/tensorflow-1.4:cuda8-cudnn6-py2_e06c3286-4ff1-4c59-9b57-05ff3185a916
+export TENSORFLOW_1_4_PYTHON3=$DOCKER_REGISTRY/tensorflow-1.4:cuda8-cudnn6-py3_14515c01-1b60-4d71-bd33-4506df20552b
+export TENSORFLOW_1_8_PYTHON2=$DOCKER_REGISTRY/tensorflow-1.8:cuda9-cudnn7-py2_ecf4cace-e198-4289-aeab-8ca38bb1bebf
+export TENSORFLOW_1_8_PYTHON3=$DOCKER_REGISTRY/tensorflow-1.8:cuda9-cudnn7-py3_1bfca13e-39c7-4fe0-a2f6-ae584c86ab3f
+export TENSORFLOW_SERVING_IMAGE=$DOCKER_REGISTRY/tensorflow-serving
+export HTTP_PROXY_IMAGE=$DOCKER_REGISTRY/http-proxy
+export PADDLEPADDLE_SERVING_IMAGE=$DOCKER_REGISTRY/paddlepaddle-serving
+export BUILTIN_ALGORITHM_IMAGE=$DOCKER_REGISTRY/builtin-algorithm:sklearn-py2_26d3ac98-ac0f-49d4-809f-c9144ce1ffac
+
+# visualization
+export VISUALIZATION_SERVICE_IMAGE=${DOCKER_REGISTRY}/bdl-visualization-service:latest
+export VISUALIZATION_IMAGE=${DOCKER_REGISTRY}/visualization:latest
+export VISUALIZATION_ADDRESS=$MASTER_IP:8666
+
+# kubernetes-dashboard
+export KUBERNETES_DASHBOARD_VERSION=1.8.3.1
+export KUBERNETES_DASHBOARD_IMAGE_TAR=kubernetes-dashboard-${KUBERNETES_DASHBOARD_VERSION}.tar
+export KUBERNETES_DASHBOARD_NAME=kubernetes-dashboard-amd64
+export KUBERNETES_DASHBOARD_INSECURE_PORT=9090
+export KUBERNETES_DASHBOARD_NODE_PORT=8663
+export KUBERNETES_APISERVER_HOST=https://${MASTER_IP}:6443
+
+export KUBERNETES_HEAPSTER_VERSION=1.5.1
+export HEAPSTER_IMAGE_TAR=heapster-${KUBERNETES_HEAPSTER_VERSION}.tar
+export KUBERNETES_HEAPSTER_NAME=heapster-amd64
+export KUBERNETES_HEAPSTER_PORT=8082
+
+export INFLUXDB_VERSION=1.3.3
+export INFLUXDB_IMAGE_TAR=influxdb-${INFLUXDB_VERSION}.tar
+export INFLUXDB_NAME=heapster-influxdb-amd64
+export INFLUXDB_QUERY_ADDRESS=http://${MASTER_IP}:8686/query
+
+# k8s 
+export KUBE_CLUSTER_DNS_IP=10.96.0.10
+export K8S_CLUSTER_DOMAIN=cluster.k8s.local
+
+# nginx
+export BAIDU_KUBERNETES_LOG_PATH=/user/hdfs/bdl/nginx/logs
+export BAIDU_KUBERNETES_LOG_ENDPOINT=${NAMENODE_HOST}:${WEB_HDFS_PORT}
+export BAIDU_KUBERNETES_LOG_FLUSH_FREQUENCY=10s
+export NGINX_POD_LOG_VOLUME=/var/log
+export NGINX_IMAGE_NAME=${DOCKER_REGISTRY}/nginx:v2_8
+export NGINX_LOACAL_IMAGE_NAME=nginx:v1
+export NGINX_NODE_PORT=8687
+export NGINX_SERVICE_PORT=8087
+
+# queue/project
+export SYSTEM_PROJECT_ID=733ee11a-28f7-488e-864f-05015c2687cb
+export SYSTEM_PROJECT_NAME=system-project
+export DEFAULT_QUEUE_ID=f69c539e-7900-4b41-b04b-4a8183d16da6
+export DEFAULT_QUEUE_NAME=default-queue
+
+# storage
+export DEFAULT_STORAGE_ID=519f2d3c-bd9f-4a6c-adf4-78599a0c73f0
+export DEFAULT_STORAGE_NAME=default-storage
+export KRB5CONF_HOME_DIR=/ape-kerberos
+export KRB5CONF_TEMPLATE_NAME=krb5-template.conf
+
+# model
+export SYSTEM_MODEL_HDFS_PATH=/ape/project/${SYSTEM_PROJECT_NAME}/model
+export ADMIN_MODEL_HDFS_PATH=/ape/project/admin/model
+
+# built-in algorithm
+export BUILTIN_ALGORITHM_FILE_HDFS_PATH=/ape/machinelearning
+
+# k8s env.
+export NETWORK_DEVICE_NAME_PREFFIX="eth"
+export K8S_LOG_DIR=${K8S_LOG_DIR:-/mnt/log/k8s}
+export KUBELET_ROOT_DIR=${WORK_DIR}/kubelet
+
+# fuse
+export FUSE_LOG_DIR=$K8S_LOG_DIR/fuse
+
+export DOCKER_REGISTRY_LOCAL=`hostname -i`:5000
+export DOCKER_REGISTRY=${DOCKER_REGISTRY:-$DOCKER_REGISTRY_LOCAL}
+export PAUSE_IMAGE=pause-amd64:3.0
+
+export PACKAGE_DIR=${WORK_DIR}/packages
+export TMP_DIR=${TMP_DIR:-/tmp/k8s_deploy}
+
+export ETCD_TAR_FILE=etcd-v3.2.9-linux-amd64.tar.gz
+export ETCD_BIN_DIR=${ETCD_BIN_DIR:-/usr/bin}
+export ETCD_LIB_DIR=${ETCD_LIB_DIR:-/var/lib/etcd}
+export ETCD_CONF_DIR=${ETCD_CONF_DIR:-/etc/etcd}
+export ETCD_PORT=${ETCD_PORT:-2379}
+export ETCD_SERVER_TRANSPORT=${ETCD_SERVER_TRANSPORT:-2380}
+export ETCD_ENDPOINTS=http://$MASTER_IP:2379
+
+
+export CNI_TAR_FILE=cni_bin.tar.gz
+export CNI_BIN_DIR=/opt/cni/bin
+export FLANNEL_BIN_DIR=/opt/flannel
+export NET_CONF_DIR=/etc/cni/net.d/
+
+export FLANNEL_TAR_FILE=flannel-v0.9.0-linux-amd64.tar.gz
+export DOCKER_CONF_PATH=${DOCKER_CONF_PATH:-/etc/docker}
+export DOCKER_DATA_PATH=${DOCKER_DATA_PATH:-/home/docker-data}
+
+# No need to set the following 3 variables if you don't deploy a private docker registry.
+export DOCKER_REGISTRY_IMAGE=docker_registry_v2.tar
+export DOCKER_REGISTRY_DATA_DIR=${DOCKER_REGISTRY_DATA_DIR:-/home/docker-registry}
+export DOCKER_REGISTRY_PORT=5000
+
+export K8S_CONF_DIR=${K8S_CONF_DIR:-/etc/kubernetes}
+export K8S_BIN_DIR=${K8S_BIN_DIR:-/usr/bin}
+export KUBE_CONF_DIR=$HOME/.kube
+export TARGET_CERT_DIR=${K8S_CONF_DIR}/pki
+export CA_CERT_FILE=ca.crt
+export CA_KEY_FILE=ca.key
+export SERVICE_ACCOUNT_PRI_KEY_FILE=sa.key
+export SERVICE_ACCOUNT_PUB_KEY_FILE=sa.pub
+export API_SERVER_IMAGE=kube-apiserver-amd64:v1.10.0
+export API_SERVER_CERT_FILE=apiserver.crt
+export API_SERVER_KEY_FILE=apiserver.key
+export API_SERVER_CERT_REQ=apiserver.csr
+export API_SERVER_CERT_CONF=apiserver-crt.conf
+export API_SERVER_CLIENT_CERT_FILE=apiserver-kubelet-client.crt
+export API_SERVER_CLIENT_KEY_FILE=apiserver-kubelet-client.key
+export API_SERVER_CLIENT_CERT_REQ=apiserver-kubelet-client.csr
+export API_SERVER_CLIENT_CERT_CONF=apiserver-kubelet-client-crt.conf
+export POD_IP_RANGE="10.244.0.0/16"
+export SERVICE_IP_RANGE_PREFIX="10.96.0."
+export API_SERVER_CLUSTER_IP=$SERVICE_IP_RANGE_PREFIX"1"
+export API_SERVER_CLUSTER_PORT=443
+export API_SERVER_IP=${MASTER_IP}
+export API_SERVER_PORT=6443
+export VICE_MASTER_NUM=`echo $VICE_MASTER_LIST | awk '{if(NF>0)print $0}' | wc -l`
+
+export CONTROLLER_MANAGER_CONF_FILE=controller-manager.conf
+export SCHEDULER_CONF_FILE=scheduler.conf
+export ADMIN_CONF_FILE=admin.conf
+export KUBELET_CONF_FILE=kubelet.conf
+export KUBELET_CERT_FILE=kubelet.crt
+export KUBELET_CERT_KEY=kubelet.key
+export KUBELET_CERT_REQ=kubelet.csr
+export KUBELET_CERT_CONF=kubelet-crt.conf
+
+export KUBEPROXY_CERT_FILE=kube-proxy.crt
+export KUBEPROXY_CERT_KEY=kube-proxy.key
+export KUBEPROXY_CERT_REQ=kube-proxy.csr
+
+# KUBE DNS
+export KUBE_CLUSTER_DNS_IP=${KUBE_CLUSTER_DNS_IP:-'10.96.0.10'}
+export K8S_CLUSTER_DOMAIN="cluster.k8s.local"

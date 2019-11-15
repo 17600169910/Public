@@ -1,0 +1,31 @@
+#!/bin/bash
+set -ex
+
+source $(pwd)/function.sh >/dev/null
+
+function remove() {
+sum=0
+A=$(grep -r "Ciphers" /etc/ssh/sshd_config|wc -l)
+B=$(grep -r "MACs" /etc/ssh/sshd_config|wc -l)
+if [ $A -ge 1 ];then
+     sum=1
+else
+    if [ $B -ge 1 ];then
+      sum=1
+    fi
+fi
+if [ "$sum" -eq 1 ];then
+sed -i '/MACs/d' /etc/ssh/sshd_config
+sed -i '/Ciphers/d' /etc/ssh/sshd_config
+
+systemctl restart sshd
+
+if [ $? -eq 0 ];then
+	green_echo "sshd remove ok "
+fi
+else
+	green_echo "sshd remove skip ..."
+fi
+	
+}
+remove

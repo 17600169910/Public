@@ -1,0 +1,96 @@
+#!/bin/bash
+set -ex
+
+function stop_server() {
+
+Master_Service_name=(
+etcd
+flannel
+kubelet
+kube-proxy
+kube-apiserver
+kube-controller-manager
+kube-scheduler
+)
+Slave_Service_Name=(
+docker
+kubelet
+kube-proxy
+flannel
+)
+function delete() {
+rm -rf /etc/kubernetes
+rm -f /home/log/k8s/*
+rm -rf /etc/cni/net.d/
+rm -rf /var/lib/cni
+rm -rf /opt/cni/
+rm -rf /etc/etcd
+rm -rf /var/lib/etcd
+rm -rf /etc/docker
+rpm -e docker-engine
+yum remove -y keepalived haproxy
+rm -rf /etc/haproxy
+rm -rf /etc/keepalived
+}
+
+system_file_master=(
+kubelet.service
+kube-proxy.service
+flannel.service
+docker.service
+etcd.service
+kube-apiserver.service
+kube-controller-manager.service
+kube-scheduler.service
+keepalived.service
+haproxy.service
+)
+
+if [ "$1" == "master" ];then
+	for i in ${Master_Service_name[@]};do
+		system_dir="/usr/lib/systemd/system/${i}"
+		if [ -f "$system_dir" ];then
+			systemctl stop $i >/dev/null 2>&1
+			systemctl disable $i >/dev/null 2>&1
+		else
+			continue
+		fi
+		
+	done
+	for q in ${system_file_master[@]};do
+		rm -rf /usr/lib/systemd/system/$q && echo "remove $q ok"
+	done
+	rm -rf /usr/bin/kubelet
+        rm -rf /usr/bin/kube-proxy
+        rm -rf /usr/bin/kubectl
+	rm -rf /usr/bin/kube-scheduler
+	rm -rf /usr/bin/kube-controller-manager
+	rm -rf /usr/bin/kube-apiserver
+        rm -rf ~/.kube/
+	rm -rf /opt/flannel
+	delete
+	green_echo "kubernetes clean complete~"
+elif [ $1 == "slave" ] || [ $1 == "cluster_slave" ];then
+	for s in ${Slave_Service_Name[@]};do
+		system_dir="/usr/lib/systemd/system/${s}"
+		if [ -f "$system_dir" ];then
+		systemctl stop $s >/dev/null
+		systemctl disable $s >/dev/null 
+		else
+			continue
+		fi
+	done
+	for ((n=0;n<=4;n++))
+	do
+	    rm -rf /usr/lib/systemd/system/${system_file_master[$n]}
+	done
+	rm -rf /usr/bin/kubelet
+	rm -rf /usr/bin/kube-proxy
+	rm -rf /usr/bin/kubectl
+	rm -rf ~/.kube/
+	rm -rf /opt/flannel
+	delete
+	green_echo "kubernetes clean complete~"
+fi
+}
+stop_server $1

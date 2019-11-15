@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -ex
+source $(pwd)/function.sh
+function remove() {
+sum=0
+hadoop=(
+$HADOOP_DIR/hadoop
+$HADOOP_DIR/hadoop-2.7.3
+)
+
+for i in ${hadoop[@]};do
+	if [ -d "$i" ];then
+		sum=1
+	fi
+done
+if [ $sum -eq 1 ];then
+	for n in ${hadoop[@]};do
+	 	rm -rf $n
+		green_echo "hadoop remove ok"
+	done
+else
+		green_echo "hadoop remove skip ...."
+fi
+
+}
+remove

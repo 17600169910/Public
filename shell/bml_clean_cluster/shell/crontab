@@ -1,0 +1,18 @@
+#!/bin/bash
+
+source $(pwd)/function.sh
+
+function remove() {
+num=0
+sum=$(crontab -l |wc -l) 
+if [ $sum -eq 1 ];then
+	num=1
+fi
+if [ $num -eq 1 ];then
+	crontab -r -u root && systemctl restart crond
+	green_echo "crontab remove ok"
+else
+	green_echo "crontab remove skip ...."
+fi
+}
+remove
