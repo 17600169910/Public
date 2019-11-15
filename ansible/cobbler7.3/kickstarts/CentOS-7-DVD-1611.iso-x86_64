@@ -1,0 +1,60 @@
+#platform=x86, AMD64, or Intel EM64T
+#version=DEVEL
+# Install OS instead of upgrade
+install
+# Keyboard layouts
+keyboard 'us'
+# Root password
+rootpw --iscrypted $1$baidu@12$sQTbXTHqCI2dUuH5Slj8t1
+# Use network installation
+url --url="$tree"
+# System language
+lang en_US
+# Firewall configuration
+firewall --disabled
+# System authorization information
+auth  --useshadow  --passalgo=sha512
+# Use graphical install
+graphical
+firstboot --disable
+# SELinux configuration
+selinux --disabled
+# Network information
+network  --bootproto=dhcp --device=eth0
+# Reboot after installation
+reboot
+# System timezone
+timezone Asia/Shanghai
+# System bootloader configuration
+bootloader --location=mbr
+# Clear the Master Boot Record
+zerombr
+# Partition clearing information
+clearpart --all --initlabel
+# Disk partitioning information
+part /boot --asprimary --fstype="ext4" --size=1024 --ondisk=sda
+#part swap --fstype="swap" --size=1024
+part / --fstype="ext4" --size=102400  --ondisk=sda
+#part /data 
+part /data --fstype="ext4" --grow     --ondisk=sda
+
+#part /docker-data disk
+part /docker-data --fstype="xfs" --grow --ondisk=sdb
+
+%packages
+gcc
+gcc-c++
+vim
+wget
+tree
+openssl
+openssl-devel
+zlib
+zlib-devel
+wget
+@base
+@core
+@compat-libraries
+@debugging
+@development
+%end

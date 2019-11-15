@@ -1,0 +1,84 @@
+#!/bin/bash
+
+Work_Dir=$(cd $(dirname $0) && pwd)
+
+echo $Work_Dir
+
+
+##Cobbler安装包文件夹
+export PACKER=""
+##Cobbler安装包默认文件夹
+export PACKER="${PACKER:-${Work_Dir}/packers}"
+
+##Cobbler安装主机,需要填写Server端IP地址{必填}
+export Cobbler_Host="10.0.0.1"
+
+##Cobbler默认安装主机
+export Cobbler_Host="${Cobbler_Host:-127.0.0.1}"
+
+##Cobbler主配置文件位置
+export Cobbler_Config=""
+
+##Cobbler默认主配置文件位置
+export Cobbler_Config="${Cobbler_Config:-/etc/cobbler/settings}"
+
+##Cobbler TFTP配置文件位置
+export Cobbler_Config_Tftp=""
+
+##Cobbler 默认TFTP配置文件位置
+export Cobbler_Config_Tftp="${Cobbler_Config_Tftp:-/etc/xinetd.d/tftp}"
+
+##Cobbler 依赖Get-Loaders 文件位置
+export Get_Loaders_File="${Work_Dir}/get-loaders"
+
+##Cobbler 依赖Get-Loaders 文件目标存储位置
+export Get_Loaders_File_Dir="/var/lib/cobbler/loaders/"
+##Cobbler需要启动的服务
+##数组格式，使用“,”号进行分割
+##1,httpd
+##2,crobblerd
+export Server_Starting=(1,httpd 2,cobblerd 3,rsyncd)
+
+## Cobbler 需要的加密密码串
+export Cobbler_Pass=""
+
+## Cobbler m默认的加密密码串
+export Cobbler_Pass=${Cobbler_Pass:-baidu@123}
+
+
+## Cobbler DHCP 配置文件位置
+
+export Cobbler_DHCP_Config="/etc/cobbler/dhcp.template"
+## Cobbler DHCP 下发网段配置
+export Cobbler_DHCP_Subnet=""
+## Cobbler DHCP 默认下发网段
+export Cobbler_DHCP_Subnet=${Cobbler_DHCP_Subnet:-10.0.0.0}
+## Cobbler DHCP 下发子网
+export Cobbler_DHCP_Netmask=""
+## Cobbler DHCP 默认下发子网
+export Cobbler_DHCP_Netmask=${Cobbler_DHCP_Netmask:-255.255.255.0}
+## Cobbler DHCP 下发网关地址
+export Cobbler_DHCP_Routers=""
+## Cobbler DHCP 默认下发网关地址
+export Cobbler_DHCP_Routers=${Cobbler_DHCP_Routers:-$Cobbler_Host}
+## Cobbler DHCP 下发DNS
+export Cobbler_DHCP_Nameserver=""
+## Cobbler DHCP 默认下发DNS
+export Cobbler_DHCP_Nameserver=${Cobbler_DHCP_Nameserver:-$Cobbler_Host}
+## Cobbler DHCP 下发地址范围
+export Cobbler_DHCP_Range=""
+## Cobbler DHCP 下发地址范围
+export Cobbler_DHCP_Range=${Cobbler_DHCP_Range:-10.0.0.100 10.0.0.200}
+
+##Cobbler安装包文件夹
+export MIRRORS=""
+##Cobbler安装包默认文件夹
+export MIRRORS="${MIRRORS:-${Work_Dir}/mirrors}"
+
+##Kistart 目录
+export KistartDir="${Work_Dir}/kickstarts"
+
+## Cobbler The album version
+export Cobbler_album=(CentOS-7-x86_64-DVD-1611.iso)
+
+
