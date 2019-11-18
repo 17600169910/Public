@@ -31,6 +31,8 @@ bootloader --location=mbr
 zerombr
 # Partition clearing information
 clearpart --all --initlabel
+# Greater than 2T needs to be turned on
+#part biosboot  --fstype=biosboot --size=1 --ondisk=sda
 # Disk partitioning information
 part /boot --asprimary --fstype="ext4" --size=1024 --ondisk=sda
 #part swap --fstype="swap" --size=1024
